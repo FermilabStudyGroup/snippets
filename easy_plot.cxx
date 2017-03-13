@@ -1,13 +1,17 @@
+//c++ includes
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
 #include <sstream>
 
+//ROOT includes
 #include "TH1.h"
 #include "TCanvas.h"
 #include "TFile.h"
 
+//function to read and return files
+//note return type
 std::vector < std::vector < double> > load_file(const char * file_name)
 {
 
@@ -50,16 +54,15 @@ std::vector < std::vector < double> > load_file(const char * file_name)
 				std::cerr << "No convertion to double from string... skipping" << std::endl;
 				break;
 			}
+			//file assumes 3 data products per line
 			if(counter == 3)
 			{
-				//std::cout << '\n';
 				file_vector.push_back(data_vector);
 				data_vector.clear();
 				counter = 0;
 			}
 			if(counter != 3)
 			{
-				//std::cout << data << ", ";
 				data_vector.push_back(data);
 				counter++;
 			}
@@ -74,6 +77,7 @@ std::vector < std::vector < double> > load_file(const char * file_name)
 
 }
 
+//histogram plotting function
 void plot_histogram(const char * h_name,
                     const char * h_title,
                     const char * file_name,
@@ -84,8 +88,8 @@ void plot_histogram(const char * h_name,
 {
 	std::sort(vector_name.begin(), vector_name.end());
 
-	const double max_bin = vector_name.back().at(1);//grab x
-	const double min_bin = vector_name.front().at(1);//grab x
+	const double max_bin = vector_name.back().at(1);//grab max x
+	const double min_bin = vector_name.front().at(1);//grab min x
 
 	TCanvas * c1 = new TCanvas();
 	c1->cd();
@@ -107,13 +111,15 @@ void plot_histogram(const char * h_name,
 
 }
 
-
+//try running functions here
 int main()
 {
-
+	//file name
 	const char * in_file = "plot_data.txt";
+
 	std::vector < std::vector < double > > plot_data;
 
+	//if problem opening and loading file, exit
 	try
 	{
 		plot_data = load_file(in_file);
@@ -124,6 +130,7 @@ int main()
 		exit(1);
 	}
 
+	//see function for variables
 	plot_histogram("h_test", "h_title", "h_title.pdf", "x", "y", plot_data);
 
 	return 0;
