@@ -1,19 +1,24 @@
+//c++ library includes
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
 #include <sstream>
 
+//ROOT includes - using Root v6.X
 #include "TH1.h"
 #include "TCanvas.h"
 #include "TFile.h"
 
+//simple load doubles from text file
 std::vector < std::vector < double> > load_file(const char * file_name)
 {
 
 	std::vector < std::vector < double > > file_vector;
 	std::ifstream myfile;
 	myfile.open(file_name);
+
+	//some exception handling for file io
 	if(!myfile.is_open())
 	{
 		throw "File is not open!";
@@ -31,6 +36,10 @@ std::vector < std::vector < double> > load_file(const char * file_name)
 	std::string line;
 	std::vector<double> data_vector;
 
+	//read the data out from the file
+	//this readout assumes that values are ',' separated
+	//also attempts to handle values which cannot be converted
+	//from string to double
 	while( !myfile.eof() )
 	{
 		std::string s;
@@ -50,16 +59,16 @@ std::vector < std::vector < double> > load_file(const char * file_name)
 				std::cerr << "No convertion to double from string... skipping" << std::endl;
 				break;
 			}
+
+			//assumes that we have 3 values per line
 			if(counter == 3)
 			{
-				//std::cout << '\n';
 				file_vector.push_back(data_vector);
 				data_vector.clear();
 				counter = 0;
 			}
 			if(counter != 3)
 			{
-				//std::cout << data << ", ";
 				data_vector.push_back(data);
 				counter++;
 			}
@@ -74,6 +83,7 @@ std::vector < std::vector < double> > load_file(const char * file_name)
 
 }
 
+//histogram plotting function
 void plot_histogram(const char * h_name,
                     const char * h_title,
                     const char * file_name,
@@ -102,12 +112,13 @@ void plot_histogram(const char * h_name,
 	h2->Draw();
 	h2->GetXaxis()->SetTitle(axis_title_x);
 	h2->GetYaxis()->SetTitle(axis_title_y);
-	h1->Draw("same");
+	//h1->Draw("same");
 	c1->Print(file_name);
 
 }
 
-
+//main - call functions here
+//try open file -> plot histogram
 int main()
 {
 
