@@ -1,16 +1,29 @@
+<<<<<<< HEAD
 //c++ library includes
+=======
+//c++ includes
+>>>>>>> 35dc3b7a0dbd0c34442e9ab8eac53c316a0a05a1
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <string>
 #include <sstream>
 
+<<<<<<< HEAD
 //ROOT includes - using Root v6.X
+=======
+//ROOT includes
+>>>>>>> 35dc3b7a0dbd0c34442e9ab8eac53c316a0a05a1
 #include "TH1.h"
 #include "TCanvas.h"
 #include "TFile.h"
 
+<<<<<<< HEAD
 //simple load doubles from text file
+=======
+//function to read and return files
+//note return type
+>>>>>>> 35dc3b7a0dbd0c34442e9ab8eac53c316a0a05a1
 std::vector < std::vector < double> > load_file(const char * file_name)
 {
 
@@ -59,8 +72,12 @@ std::vector < std::vector < double> > load_file(const char * file_name)
 				std::cerr << "No convertion to double from string... skipping" << std::endl;
 				break;
 			}
+<<<<<<< HEAD
 
 			//assumes that we have 3 values per line
+=======
+			//file assumes 3 data products per line
+>>>>>>> 35dc3b7a0dbd0c34442e9ab8eac53c316a0a05a1
 			if(counter == 3)
 			{
 				file_vector.push_back(data_vector);
@@ -94,8 +111,8 @@ void plot_histogram(const char * h_name,
 {
 	std::sort(vector_name.begin(), vector_name.end());
 
-	const double max_bin = vector_name.back().at(1);//grab x
-	const double min_bin = vector_name.front().at(1);//grab x
+	const double max_bin = vector_name.back().at(1);//grab max x
+	const double min_bin = vector_name.front().at(1);//grab min x
 
 	TCanvas * c1 = new TCanvas();
 	c1->cd();
@@ -117,14 +134,20 @@ void plot_histogram(const char * h_name,
 
 }
 
+<<<<<<< HEAD
 //main - call functions here
 //try open file -> plot histogram
+=======
+//try running functions here
+>>>>>>> 35dc3b7a0dbd0c34442e9ab8eac53c316a0a05a1
 int main()
 {
-
+	//file name
 	const char * in_file = "plot_data.txt";
+
 	std::vector < std::vector < double > > plot_data;
 
+	//if problem opening and loading file, exit
 	try
 	{
 		plot_data = load_file(in_file);
@@ -135,6 +158,7 @@ int main()
 		exit(1);
 	}
 
+	//see function for variables
 	plot_histogram("h_test", "h_title", "h_title.pdf", "x", "y", plot_data);
 
 	return 0;
