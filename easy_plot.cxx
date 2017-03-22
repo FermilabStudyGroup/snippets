@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include <algorithm>
 
 //ROOT includes - using Root v6.X
 //ROOT includes
