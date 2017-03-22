@@ -11,6 +11,7 @@
 #include "TH1.h"
 #include "TCanvas.h"
 #include "TFile.h"
+#include "TLegend.h"
 
 //simple load doubles from text file
 //function to read and return files
@@ -99,26 +100,42 @@ void plot_histogram(const char * h_name,
 {
 	std::sort(vector_name.begin(), vector_name.end());
 
-	const double max_bin = vector_name.back().at(1);//grab max x
-	const double min_bin = vector_name.front().at(1);//grab min x
+    const double max_bin = 20; //vector_name.back().at(1);//grab max x
+    const double min_bin = 0; //vector_name.front().at(1);//grab min x
 
 	TCanvas * c1 = new TCanvas();
 	c1->cd();
-	TH1D * h1 = new TH1D(h_name, h_title, 50, min_bin, max_bin);
-	TH1D * h2 = new TH1D(h_name, h_title, 50, min_bin, max_bin);
+    c1->SetGrid();
+	TH1D * h1 = new TH1D(h_name, h_title, 104, min_bin, max_bin);
+	TH1D * h2 = new TH1D(h_name, h_title, 104, min_bin, max_bin);
 
 	for(int i = 0; i < vector_name.size(); i++)
 	{
 		h1->Fill(vector_name.at(i).at(1), vector_name.at(i).at(2));
-		h2->Fill(h1->Integral());
 	}
 
+    // plot cumulative sum
+    double cumulativeSum = 0;
+    for(int iBin = 0; iBin < h1->GetNbinsX(); iBin++){
+        cumulativeSum = cumulativeSum + h1->GetBinContent(iBin+1);
+        h2->SetBinContent(iBin+1, cumulativeSum/30.0);
+    }
 
-	h2->Draw();
-	h2->GetXaxis()->SetTitle(axis_title_x);
-	h2->GetYaxis()->SetTitle(axis_title_y);
-	//h1->Draw("same");
-	c1->Print(file_name);
+    // plot legend
+    TLegend *leg = new TLegend(0.15, 0.7, 0.4, 0.85);
+    leg->AddEntry(h1, "RandomData");
+    leg->AddEntry(h2, "CumulativeSum");
+
+    h1->SetMaximum(3.0);
+	h1->GetXaxis()->SetTitle(axis_title_x);
+	h1->GetYaxis()->SetTitle(axis_title_y);
+	h2->SetLineColor(kGreen-8);
+    
+    h1->Draw("hist");
+    h2->Draw("same");
+    leg->Draw("same");
+
+    c1->Print(file_name);
 
 }
 
